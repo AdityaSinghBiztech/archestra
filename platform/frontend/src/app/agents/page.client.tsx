@@ -6,7 +6,7 @@ import {
   E2eTestId,
 } from "@archestra/shared";
 import type { ColumnDef, SortingState } from "@tanstack/react-table";
-import { ChevronDown, ChevronUp, Plus, Upload } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Upload, ChevronRight, Bot } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ import { ErrorBoundary } from "@/app/_parts/error-boundary";
 import { A2AConnectionInstructions } from "@/components/a2a-connection-instructions";
 import { AgentDialog } from "@/components/agent-dialog";
 import { AgentIcon } from "@/components/agent-icon";
+import { AgentTemplateCatalog } from "@/components/agent-template-catalog";
 import { AgentNameCell } from "@/components/agent-name-cell";
 import {
   ActiveFilterBadges,
@@ -188,6 +189,7 @@ function Agents({ initialData }: { initialData?: AgentsInitialData }) {
   type AgentData = archestraApiTypes.GetAgentsResponses["200"]["data"][number];
 
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [showCatalog, setShowCatalog] = useState(false);
   const [connectingAgent, setConnectingAgent] = useState<{
     id: string;
     name: string;
@@ -540,6 +542,24 @@ function Agents({ initialData }: { initialData?: AgentsInitialData }) {
       >
         <div>
           <div>
+            <div className="mb-6 border rounded-lg bg-card text-card-foreground">
+              <button
+                type="button"
+                className="flex items-center justify-between w-full p-4 font-medium text-sm text-left hover:bg-muted/50 rounded-lg transition-colors"
+                onClick={() => setShowCatalog(!showCatalog)}
+              >
+                <span className="flex items-center gap-2">
+                  <Bot className="h-4 w-4" />
+                  Quickstart Agent Templates
+                </span>
+                {showCatalog ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              </button>
+              {showCatalog && (
+                <div className="p-4 border-t bg-muted/10">
+                  <AgentTemplateCatalog />
+                </div>
+              )}
+            </div>
             <div className="mb-6 flex flex-col gap-2">
               <div className="flex items-center gap-4">
                 <SearchInput
