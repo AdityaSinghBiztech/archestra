@@ -12,7 +12,7 @@ import {
 } from "@/clients/chat-mcp-client";
 import type { ChatMcpElicitationBridge } from "@/clients/chat-mcp-elicitation";
 import type { CollectedHookRun } from "@/hooks/hook-run-parts";
-import { ConversationEnabledToolModel, TeamModel } from "@/models";
+import { ConversationEnabledToolModel, TeamModel, AgentMemoryModel } from "@/models";
 import { buildSkillCatalogPrompt } from "@/skills/skill-catalog-prompt";
 import {
   promptNeedsRendering,
@@ -104,6 +104,22 @@ export async function buildChatContext(params: {
 
   const renderedPrompt = renderSystemPrompt(agent.systemPrompt, promptContext);
 
+  // Fetch user team IDs and query active durable memories
+  const teamIds = await TeamModel.getUserTeamIds(user.id);
+  const memories = await AgentMemoryModel.findActiveMemories({
+    organizationId,
+    userId: user.id,
+    teamIds,
+  });
+
+  let memoryPrompt: string | undefined = undefined;
+  if (memories.length > 0) {
+    const memoryBlock = memories
+      .map((m) => `- [${m.scope.toUpperCase()}] ${m.key}: ${m.value}`)
+      .join("\n");
+    memoryPrompt = `# Durable Memory Context\nYou remember the following facts:\n${memoryBlock}`;
+  }
+
   let toolResultInstructions: string = "";
   // Add MCP UI instruction when tools are available
   if (Object.keys(mcpTools).length > 0) {
@@ -134,6 +150,7 @@ export async function buildChatContext(params: {
     [
       toolLoadingInstructions,
       renderedPrompt,
+      memoryPrompt,
       skillCatalogPrompt,
       toolDenialInstruction,
       toolResultInstructions,

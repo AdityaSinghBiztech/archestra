@@ -43,6 +43,7 @@ export { default as a2aMessagesTable } from "./a2a-message";
 export { default as a2aTasksTable } from "./a2a-task";
 export { default as a2aTaskApprovalRequestsTable } from "./a2a-task-approval-request";
 export { default as accountsTable } from "./account";
+export { default as agentMemoriesTable } from "./agent-memory";
 export { default as agentsTable } from "./agent";
 export { default as agentConnectorAssignmentsTable } from "./agent-connector-assignment";
 export { default as agentKnowledgeBasesTable } from "./agent-knowledge-base";

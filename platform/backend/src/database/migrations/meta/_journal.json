@@ -2017,6 +2017,13 @@
       "when": 1781344711260,
       "tag": "0287_mcp_apps",
       "breakpoints": true
+    },
+    {
+      "idx": 288,
+      "version": "7",
+      "when": 1781540055859,
+      "tag": "0288_spotty_boomer",
+      "breakpoints": true
     }
   ]
 }

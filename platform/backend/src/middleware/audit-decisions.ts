@@ -536,6 +536,14 @@ export const AUDIT_DECISIONS = {
     audited: false,
     reason: "ephemeral in-app notifications; per-user UI state",
   },
+
+  // =========================================================================
+  // Agent Memories
+  // =========================================================================
+  agentMemoriesTable: {
+    audited: false,
+    reason: "durable agent memories containing user/team/org facts and preferences",
+  },
 } satisfies Record<keyof typeof schema, AuditDecision>;
 
 /**
